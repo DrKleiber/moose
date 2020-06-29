@@ -183,17 +183,17 @@ MooseMesh::MooseMesh(const InputParameters & parameters)
     _regular_orthogonal_mesh(false),
     _allow_recovery(true),
     _construct_node_list_from_side_list(getParam<bool>("construct_node_list_from_side_list")),
-    _prepare_timer(registerTimedSection("prepare", 2)),
-    _update_timer(registerTimedSection("update", 3)),
-    _mesh_changed_timer(registerTimedSection("meshChanged", 3)),
-    _cache_changed_lists_timer(registerTimedSection("cacheChangedLists", 5)),
+    _prepare_timer(registerTimedSection("prepare", 2, "Preparing Mesh", true)),
+    _update_timer(registerTimedSection("update", 3, "Updating Mesh", true)),
+    _mesh_changed_timer(registerTimedSection("meshChanged", 3, "Updating Because Mesh Changed", true)),
+    _cache_changed_lists_timer(registerTimedSection("cacheChangedLists", 5, "Caching Changed Lists", true)),
     _update_active_semi_local_node_range_timer(
-        registerTimedSection("updateActiveSemiLocalNodeRange", 5)),
-    _build_node_list_timer(registerTimedSection("buildNodeList", 5)),
-    _build_bnd_elem_list_timer(registerTimedSection("buildBndElemList", 5)),
-    _node_to_elem_map_timer(registerTimedSection("nodeToElemMap", 5)),
+      registerTimedSection("updateActiveSemiLocalNodeRange", 5, "Updating ActiveSemiLocalNode Range", true)),
+    _build_node_list_timer(registerTimedSection("buildNodeList", 5, "Building Node List", true)),
+    _build_bnd_elem_list_timer(registerTimedSection("buildBndElemList", 5, "Building Boundary Elements List", true)),
+    _node_to_elem_map_timer(registerTimedSection("nodeToElemMap", 5, "Building Node To Elem Map", true)),
     _node_to_active_semilocal_elem_map_timer(
-        registerTimedSection("nodeToActiveSemilocalElemMap", 5)),
+      registerTimedSection("nodeToActiveSemilocalElemMap", 5, "Building SemiLocalElemMap", true)),
     _get_active_local_element_range_timer(registerTimedSection("getActiveLocalElementRange", 5)),
     _get_active_node_range_timer(registerTimedSection("getActiveNodeRange", 5)),
     _get_local_node_range_timer(registerTimedSection("getLocalNodeRange", 5)),
@@ -369,16 +369,10 @@ MooseMesh::prepare(bool force)
     // Call prepare_for_use() and don't mess with the renumbering
     // setting
     if (force || _needs_prepare_for_use)
-    {
-      CONSOLE_TIMED_PRINT("Preparing for use");
-
       getMesh().prepare_for_use();
-    }
   }
   else
   {
-    CONSOLE_TIMED_PRINT("Preparing for use");
-
     // Call prepare_for_use() and DO NOT allow renumbering
     getMesh().allow_renumbering(false);
     if (force || _needs_prepare_for_use)
@@ -660,7 +654,6 @@ void
 MooseMesh::buildNodeList()
 {
   TIME_SECTION(_build_node_list_timer);
-  CONSOLE_TIMED_PRINT("Building node lists");
 
   freeBndNodes();
 
@@ -765,7 +758,6 @@ void
 MooseMesh::buildBndElemList()
 {
   TIME_SECTION(_build_bnd_elem_list_timer);
-  CONSOLE_TIMED_PRINT("Building element lists");
 
   freeBndElems();
 
@@ -795,7 +787,6 @@ MooseMesh::nodeToElemMap()
     if (!_node_to_elem_map_built)
     {
       TIME_SECTION(_node_to_elem_map_timer);
-      CONSOLE_TIMED_PRINT("Building node to element map");
 
       for (const auto & elem : getMesh().active_element_ptr_range())
         for (unsigned int n = 0; n < elem->n_nodes(); n++)
@@ -816,7 +807,6 @@ MooseMesh::nodeToActiveSemilocalElemMap()
     Threads::spin_mutex::scoped_lock lock(Threads::spin_mtx);
 
     TIME_SECTION(_node_to_active_semilocal_elem_map_timer);
-    CONSOLE_TIMED_PRINT("Building active semilocal element map");
 
     if (!_node_to_active_semilocal_elem_map_built)
     {
@@ -840,7 +830,6 @@ MooseMesh::getActiveLocalElementRange()
   if (!_active_local_elem_range)
   {
     TIME_SECTION(_get_active_local_element_range_timer);
-    CONSOLE_TIMED_PRINT("Caching active local element range");
 
     _active_local_elem_range = libmesh_make_unique<ConstElemRange>(
         getMesh().active_local_elements_begin(), getMesh().active_local_elements_end(), GRAIN_SIZE);
@@ -855,7 +844,6 @@ MooseMesh::getActiveNodeRange()
   if (!_active_node_range)
   {
     TIME_SECTION(_get_active_node_range_timer);
-    CONSOLE_TIMED_PRINT("Caching active node range");
 
     _active_node_range = libmesh_make_unique<NodeRange>(
         getMesh().active_nodes_begin(), getMesh().active_nodes_end(), GRAIN_SIZE);
@@ -879,7 +867,6 @@ MooseMesh::getLocalNodeRange()
   if (!_local_node_range)
   {
     TIME_SECTION(_get_local_node_range_timer);
-    CONSOLE_TIMED_PRINT("Caching local node range");
 
     _local_node_range = libmesh_make_unique<ConstNodeRange>(
         getMesh().local_nodes_begin(), getMesh().local_nodes_end(), GRAIN_SIZE);
@@ -894,7 +881,6 @@ MooseMesh::getBoundaryNodeRange()
   if (!_bnd_node_range)
   {
     TIME_SECTION(_get_boundary_node_range_timer);
-    CONSOLE_TIMED_PRINT("Caching boundary node range");
 
     _bnd_node_range =
         libmesh_make_unique<ConstBndNodeRange>(bndNodesBegin(), bndNodesEnd(), GRAIN_SIZE);
@@ -909,7 +895,6 @@ MooseMesh::getBoundaryElementRange()
   if (!_bnd_elem_range)
   {
     TIME_SECTION(_get_boundary_element_range_timer);
-    CONSOLE_TIMED_PRINT("Caching boundary element range");
 
     _bnd_elem_range =
         libmesh_make_unique<ConstBndElemRange>(bndElemsBegin(), bndElemsEnd(), GRAIN_SIZE);
@@ -928,7 +913,6 @@ void
 MooseMesh::cacheInfo()
 {
   TIME_SECTION(_cache_info_timer);
-  CONSOLE_TIMED_PRINT("Caching mesh information");
 
   _sub_to_neighbor_subs.clear();
   _subdomain_boundary_ids.clear();
@@ -2320,7 +2304,6 @@ MooseMesh::init()
     // sub-apps need to just build their mesh like normal
     {
       TIME_SECTION(_read_recovered_mesh_timer);
-      CONSOLE_TIMED_PRINT("Rcovering mesh");
       getMesh().read(_app.getRestartRecoverFileBase() + "_mesh." +
                      _app.getRestartRecoverFileSuffix());
     }
@@ -2330,7 +2313,6 @@ MooseMesh::init()
   }
   else // Normally just build the mesh
   {
-    CONSOLE_TIMED_PRINT("Building mesh");
     buildMesh();
   }
 }
