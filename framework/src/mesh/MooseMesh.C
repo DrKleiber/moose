@@ -2795,6 +2795,8 @@ MooseMesh::getMesh() const
 void
 MooseMesh::printInfo(std::ostream & os) const
 {
+  os << '\n';
+
   getMesh().print_info(os);
 }
 
