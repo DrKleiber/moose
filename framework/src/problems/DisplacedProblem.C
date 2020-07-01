@@ -55,11 +55,7 @@ DisplacedProblem::DisplacedProblem(const InputParameters & parameters)
                    _mproblem.getAuxiliarySystem(),
                    _mproblem.getAuxiliarySystem().name(),
                    Moose::VAR_AUXILIARY),
-    _geometric_search_data(*this, _mesh),
-    _eq_init_timer(registerTimedSection("eq::init", 2, "Initializing Displaced Equation System")),
-    _update_mesh_timer(registerTimedSection("updateMesh", 3, "Updating Displaced Mesh")),
-    _sync_solutions_timer(registerTimedSection("syncSolutions", 5, "Syncing Displaced Solutions")),
-    _update_geometric_search_timer(registerTimedSection("updateGeometricSearch", 3, "Updating Displaced GeometricSearch"))
+    _geometric_search_data(*this, _mesh)
 
 {
   // TODO: Move newAssemblyArray further up to SubProblem so that we can use it here
@@ -143,7 +139,7 @@ DisplacedProblem::init()
   _displaced_aux.init();
 
   {
-    TIME_SECTION(_eq_init_timer);
+    TIME_SECTION(registerTimedSection("eq::init", 2, "Initializing Displaced Equation System"));
     _eq.init();
   }
 
@@ -172,7 +168,7 @@ DisplacedProblem::restoreOldSolutions()
 void
 DisplacedProblem::syncSolutions()
 {
-  TIME_SECTION(_sync_solutions_timer);
+  TIME_SECTION("syncSolutions", 5, "Syncing Displaced Solutions");
 
   (*_displaced_nl.sys().solution) = *_mproblem.getNonlinearSystemBase().currentSolution();
   (*_displaced_aux.sys().solution) = *_mproblem.getAuxiliarySystem().currentSolution();
@@ -184,7 +180,7 @@ void
 DisplacedProblem::syncSolutions(const NumericVector<Number> & soln,
                                 const NumericVector<Number> & aux_soln)
 {
-  TIME_SECTION(_sync_solutions_timer);
+  TIME_SECTION("syncSolutions", 5, "Syncing Displaced Solutions");
 
   (*_displaced_nl.sys().solution) = soln;
   (*_displaced_aux.sys().solution) = aux_soln;
@@ -195,7 +191,7 @@ DisplacedProblem::syncSolutions(const NumericVector<Number> & soln,
 void
 DisplacedProblem::updateMesh(bool mesh_changing)
 {
-  TIME_SECTION(_update_mesh_timer);
+  TIME_SECTION("updateMesh", 3, "Updating Displaced Mesh");
 
   if (mesh_changing)
   {
@@ -266,7 +262,7 @@ void
 DisplacedProblem::updateMesh(const NumericVector<Number> & soln,
                              const NumericVector<Number> & aux_soln)
 {
-  TIME_SECTION(_update_mesh_timer);
+  TIME_SECTION("updateMesh", 3, "Updating Mesh");
 
   syncSolutions(soln, aux_soln);
 
@@ -937,7 +933,7 @@ DisplacedProblem::prepareNeighborShapes(unsigned int var, THREAD_ID tid)
 void
 DisplacedProblem::updateGeomSearch(GeometricSearchData::GeometricSearchType type)
 {
-  TIME_SECTION(_update_geometric_search_timer);
+  TIME_SECTION("updateGeometricSearch", 3, "Updating Displaced GeometricSearch");
 
   _geometric_search_data.update(type);
 }
