@@ -5332,7 +5332,7 @@ FEProblemBase::computeTransientImplicitResidual(Real time,
 void
 FEProblemBase::computeResidualTags(const std::set<TagID> & tags)
 {
-  TIME_SECTION("computeResidualTags", 5 /*, "Computing Residual"*/);
+  TIME_SECTION("computeResidualTags", 5, "Computing Residual");
 
   _nl->zeroVariablesForResidual();
   _aux->zeroVariablesForResidual();
@@ -5483,7 +5483,7 @@ FEProblemBase::computeJacobianTags(const std::set<TagID> & tags)
 {
   if (!_has_jacobian || !_const_jacobian)
   {
-    TIME_SECTION("computeJacobianTags", 5 /*, "Computing Jacobian"*/);
+    TIME_SECTION("computeJacobianTags", 5, "Computing Jacobian");
 
     for (auto tag : tags)
       if (_nl->hasMatrix(tag))
