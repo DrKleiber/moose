@@ -209,7 +209,8 @@ IterationAdaptiveDT::computeDT()
 
     if (_verbose)
     {
-      _console << "Setting dt to value specified by dt function: " << std::setw(9) << dt << std::endl;
+      _console << "Setting dt to value specified by dt function: " << std::setw(9) << dt
+               << std::endl;
     }
   }
   else if (_sync_last_step)
@@ -274,7 +275,8 @@ IterationAdaptiveDT::computeFailedDT()
   if (_verbose)
   {
     _console << "\nSolve failed with dt: " << std::setw(9) << _dt
-             << "\nRetrying with reduced dt: " << std::setw(9) << _dt * _cutback_factor << std::endl;
+             << "\nRetrying with reduced dt: " << std::setw(9) << _dt * _cutback_factor
+             << std::endl;
   }
   else
     _console << "\nSolve failed, cutting timestep." << std::endl;
