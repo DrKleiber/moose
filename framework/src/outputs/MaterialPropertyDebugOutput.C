@@ -111,7 +111,7 @@ MaterialPropertyDebugOutput::printMaterialMap() const
   _console << std::setw(ConsoleUtils::console_field_width) << active_neighbor.str() << '\n';
 
   _console << std::setw(ConsoleUtils::console_field_width) << "Active Boundary Materials:\n";
-  _console << std::setw(ConsoleUtils::console_field_width) << active_boundary.str() << '\n';
+  _console << std::setw(ConsoleUtils::console_field_width) << active_boundary.str() << std::endl;
 }
 
 void
@@ -141,4 +141,6 @@ MaterialPropertyDebugOutput::printMaterialProperties(
     }
     output << '\n';
   }
+
+  output << std::flush;
 }

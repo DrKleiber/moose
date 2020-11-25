@@ -208,7 +208,7 @@ PicardSolve::solve()
             _console << " MAX ";
           else
             _console << std::scientific << _picard_initial_norm;
-          _console << COLOR_DEFAULT << "\n\n";
+          _console << COLOR_DEFAULT << "\n" << std::endl;
         }
       }
       else
@@ -219,7 +219,7 @@ PicardSolve::solve()
       }
 
       _console << COLOR_MAGENTA << "Beginning Picard Iteration " << _picard_it << COLOR_DEFAULT
-               << '\n';
+               << std::endl;
     }
 
     // Save last postprocessor value as value before solve
@@ -265,6 +265,8 @@ PicardSolve::solve()
                      << " Picard |R| = " << Console::outputNorm(_picard_initial_norm, max_norm)
                      << '\n';
           }
+
+          _console << std::flush;
 
           Real max_norm = std::max(_picard_timestep_begin_norm[_picard_it],
                                    _picard_timestep_end_norm[_picard_it]);
@@ -421,7 +423,7 @@ PicardSolve::solveStep(Real begin_norm_old,
       begin_norm = _problem.computeResidualL2Norm();
 
       _console << COLOR_MAGENTA << "Picard Norm after TIMESTEP_BEGIN MultiApps: "
-               << Console::outputNorm(begin_norm_old, begin_norm) << '\n';
+               << Console::outputNorm(begin_norm_old, begin_norm) << std::endl;
     }
 
   // Perform output for timestep begin
@@ -440,7 +442,7 @@ PicardSolve::solveStep(Real begin_norm_old,
   }
 
   if (_has_picard_its)
-    _console << COLOR_MAGENTA << "\nMaster solve:\n" << COLOR_DEFAULT;
+    _console << COLOR_MAGENTA << "\nMaster solve:\n" << COLOR_DEFAULT << std::flush;
   if (!_inner_solve->solve())
   {
     _picard_status = MoosePicardConvergenceReason::DIVERGED_NONLINEAR;
@@ -501,7 +503,7 @@ PicardSolve::solveStep(Real begin_norm_old,
       end_norm = _problem.computeResidualL2Norm();
 
       _console << COLOR_MAGENTA << "Picard Norm after TIMESTEP_END MultiApps: "
-               << Console::outputNorm(end_norm_old, end_norm) << '\n';
+               << Console::outputNorm(end_norm_old, end_norm) << std::endl;
     }
 
   return true;

@@ -486,6 +486,8 @@ MooseApp::MooseApp(InputParameters parameters)
   // that need them during the setup process. Most of the restartable data isn't made available
   // until all objects have been created and all Actions have been executed (i.e. initialSetup).
   registerRestartableDataMapName(MooseApp::MESH_META_DATA, "mesh");
+
+  Moose::out << std::flush;
 }
 
 void
@@ -666,11 +668,13 @@ MooseApp::setupOptions()
     _parser.buildJsonSyntaxTree(tree);
     JsonInputFileFormatter formatter;
     Moose::out << "### START DUMP DATA ###\n"
-               << formatter.toString(tree.getRoot()) << "\n### END DUMP DATA ###\n";
+               << formatter.toString(tree.getRoot()) << "\n### END DUMP DATA ###" << std::endl;
     _ready_to_exit = true;
   }
   else if (isParamValid("registry"))
   {
+    _perf_graph.setLivePrintActive(false);
+
     Moose::out << "Label\tType\tName\tClass\tFile\n";
 
     auto & objmap = Registry::allObjects();
@@ -698,9 +702,13 @@ MooseApp::setupOptions()
     }
 
     _ready_to_exit = true;
+
+    _perf_graph.setLivePrintActive(true);
   }
   else if (isParamValid("registry_hit"))
   {
+    _perf_graph.setLivePrintActive(false);
+
     Moose::out << "### START REGISTRY DATA ###\n";
 
     hit::Section root("");
@@ -751,18 +759,26 @@ MooseApp::setupOptions()
 
     Moose::out << "\n### END REGISTRY DATA ###\n";
     _ready_to_exit = true;
+
+    _perf_graph.setLivePrintActive(true);
   }
   else if (isParamValid("definition"))
   {
+    _perf_graph.setLivePrintActive(false);
+
     Moose::perf_log.disable_logging();
     JsonSyntaxTree tree("");
     _parser.buildJsonSyntaxTree(tree);
     SONDefinitionFormatter formatter;
     Moose::out << formatter.toString(tree.getRoot()) << "\n";
     _ready_to_exit = true;
+
+    _perf_graph.setLivePrintActive(true);
   }
   else if (isParamValid("yaml"))
   {
+    _perf_graph.setLivePrintActive(false);
+
     Moose::perf_log.disable_logging();
 
     _parser.initSyntaxFormatter(Parser::YAML, true);
@@ -779,9 +795,13 @@ MooseApp::setupOptions()
       _parser.buildFullTree(yaml_following_arg);
 
     _ready_to_exit = true;
+
+    _perf_graph.setLivePrintActive(true);
   }
   else if (isParamValid("json"))
   {
+    _perf_graph.setLivePrintActive(false);
+
     Moose::perf_log.disable_logging();
 
     // Get command line argument following --json on command line
@@ -798,9 +818,13 @@ MooseApp::setupOptions()
 
     Moose::out << "**START JSON DATA**\n" << tree.getRoot().dump(2) << "\n**END JSON DATA**\n";
     _ready_to_exit = true;
+
+    _perf_graph.setLivePrintActive(true);
   }
   else if (getParam<bool>("syntax"))
   {
+    _perf_graph.setLivePrintActive(false);
+
     Moose::perf_log.disable_logging();
 
     std::multimap<std::string, Syntax::ActionInfo> syntax = _syntax.getAssociatedActions();
@@ -809,12 +833,18 @@ MooseApp::setupOptions()
       Moose::out << it.first << "\n";
     Moose::out << "**END SYNTAX DATA**\n" << std::endl;
     _ready_to_exit = true;
+
+    _perf_graph.setLivePrintActive(true);
   }
   else if (getParam<bool>("apptype"))
   {
+    _perf_graph.setLivePrintActive(false);
+
     Moose::perf_log.disable_logging();
     Moose::out << "MooseApp Type: " << type() << std::endl;
     _ready_to_exit = true;
+
+    _perf_graph.setLivePrintActive(true);
   }
   else if (_input_filename != "" ||
            isParamValid("input_file")) // They already specified an input filename
@@ -900,6 +930,8 @@ MooseApp::setupOptions()
     _command_line->printUsage();
     _ready_to_exit = true;
   }
+
+  Moose::out << std::flush;
 }
 
 void

@@ -901,7 +901,7 @@ MultiApp::globalAppToLocal(unsigned int global_app)
   if (global_app >= _first_local_app && global_app <= _first_local_app + (_my_num_apps - 1))
     return global_app - _first_local_app;
 
-  _console << _first_local_app << " " << global_app << '\n';
+  _console << _first_local_app << " " << global_app << std::endl;
   mooseError("Invalid global_app!");
 }
 

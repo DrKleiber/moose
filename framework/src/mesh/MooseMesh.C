@@ -2738,6 +2738,8 @@ MooseMesh::printInfo(std::ostream & os) const
   os << '\n';
 
   getMesh().print_info(os);
+
+  os << std::flush;
 }
 
 const std::vector<dof_id_type> &

@@ -97,7 +97,7 @@ CouplingFunctorCheckAction::act()
         // We have to reinit all the DofMaps so we can be sure that we've ghosted the necessary
         // vector entries
         TIME_SECTION(
-            "reinitVectorsAlgebraic", 5, "Reiniting Vectors Because of Algebraic Ghosting");
+            "reinitVectorsAlgebraic", 5, "Reinitializing Vectors Because of Algebraic Ghosting");
 
         // Reassign the size because we're going to call addRelationshipManagers again for COUPLING
         size = _app.relationshipManagers().size();

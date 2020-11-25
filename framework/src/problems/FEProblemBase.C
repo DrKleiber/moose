@@ -6211,6 +6211,8 @@ FEProblemBase::checkProblemIntegrity()
         if (_displaced_problem)
           _displaced_problem->mesh().getMesh().skip_partitioning(true);
       }
+
+      _console << std::flush;
     }
 #endif
 

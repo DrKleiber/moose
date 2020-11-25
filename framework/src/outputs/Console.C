@@ -525,7 +525,7 @@ Console::writeVariableNorms()
   }
 
   // Update the output streams
-  _console << oss.str();
+  _console << oss.str() << std::flush;
 }
 
 // Quick helper to output the norm in color
@@ -557,7 +557,7 @@ Console::outputInput()
   oss << "--- " << _app.getInputFileName()
       << " ------------------------------------------------------";
   _app.actionWarehouse().printInputFile(oss);
-  _console << oss.str() << '\n';
+  _console << oss.str() << std::endl;
 }
 
 void
@@ -571,7 +571,7 @@ Console::outputPostprocessors()
     oss << "\nPostprocessor Values:\n";
     _postprocessor_table.sortColumns();
     _postprocessor_table.printTable(oss, _max_rows, _fit_mode);
-    _console << oss.str() << '\n';
+    _console << oss.str() << std::endl;
   }
 }
 
@@ -604,7 +604,7 @@ Console::outputScalarVariables()
       _scalar_table.sortColumns();
       _scalar_table.printTable(oss, _max_rows, _fit_mode);
     }
-    _console << oss.str() << '\n';
+    _console << oss.str() << std::endl;
   }
 }
 
@@ -664,6 +664,8 @@ Console::meshChanged()
     output = ConsoleUtils::outputAuxiliarySystemInformation(*_problem_ptr);
     if (!output.empty())
       _console << "Auxiliary System:\n" << output;
+
+    _console << std::flush;
   }
 }
 

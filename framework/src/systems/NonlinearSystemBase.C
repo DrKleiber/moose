@@ -2872,7 +2872,7 @@ NonlinearSystemBase::computeDamping(const NumericVector<Number> & solution,
   _communicator.min(damping);
 
   if (has_active_dampers && damping < 1.0)
-    _console << " Damping factor: " << damping << "\n";
+    _console << " Damping factor: " << damping << std::endl;
 
   return damping;
 }
