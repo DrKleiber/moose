@@ -2193,7 +2193,7 @@ operator<<(std::ostream & out, const FeatureFloodCount::FeatureData & feature)
     out << "\nVar_index: " << feature._var_index;
     out << "\nMin Entity ID: " << feature._min_entity_id;
   }
-  out << "\n\n";
+  out << "\n" << std::endl;
 
   return out;
 }

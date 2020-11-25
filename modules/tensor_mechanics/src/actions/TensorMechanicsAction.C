@@ -584,7 +584,7 @@ TensorMechanicsAction::actEigenstrainNames()
   Moose::out << COLOR_CYAN << "*** Automatic Eigenstrain Names ***"
              << "\n"
              << _name << ": " << Moose::stringify(_eigenstrain_names) << "\n"
-             << COLOR_DEFAULT;
+             << COLOR_DEFAULT << std::flush;
 }
 
 void

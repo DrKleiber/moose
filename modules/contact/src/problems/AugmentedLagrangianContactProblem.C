@@ -88,7 +88,7 @@ AugmentedLagrangianContactProblem::checkNonlinearConvergence(std::string & msg,
                                                           ref_resid,
                                                           my_div_threshold);
 
-  _console << "Augmented Lagrangian contact iteration " << _num_lagmul_iterations << "\n";
+  _console << "Augmented Lagrangian contact iteration " << _num_lagmul_iterations << std::endl;
 
   bool _augLM_repeat_step;
 
