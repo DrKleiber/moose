@@ -51,20 +51,20 @@ Logistic::quantile(const Real & p, const Real & location, const Real & shape)
 Real
 Logistic::pdf(const Real & x) const
 {
-  TIME_SECTION(_perf_pdf);
+  TIME_SECTION("Logistic::pdf", 3, "Computing PDF");
   return pdf(x, _location, _shape);
 }
 
 Real
 Logistic::cdf(const Real & x) const
 {
-  TIME_SECTION(_perf_cdf);
+  TIME_SECTION("Logistic::cdf", 3, "Computing CDF");
   return cdf(x, _location, _shape);
 }
 
 Real
 Logistic::quantile(const Real & p) const
 {
-  TIME_SECTION(_perf_quantile);
+  TIME_SECTION("Logistic::quantile", 3, "Computing Quantile");
   return quantile(p, _location, _shape);
 }

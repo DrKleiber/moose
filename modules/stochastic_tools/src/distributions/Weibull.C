@@ -65,20 +65,20 @@ Weibull::quantile(const Real & p, const Real & location, const Real & scale, con
 Real
 Weibull::pdf(const Real & x) const
 {
-  TIME_SECTION(_perf_pdf);
+  TIME_SECTION("Weibull::pdf", 3, "Computing PDF");
   return pdf(x, _a, _b, _c);
 }
 
 Real
 Weibull::cdf(const Real & x) const
 {
-  TIME_SECTION(_perf_cdf);
+  TIME_SECTION("Weibull::cdf", 3, "Computing CDF");
   return cdf(x, _a, _b, _c);
 }
 
 Real
 Weibull::quantile(const Real & p) const
 {
-  TIME_SECTION(_perf_quantile);
+  TIME_SECTION("Weibull::quantile", 3, "Computing Quantile");
   return quantile(p, _a, _b, _c);
 }

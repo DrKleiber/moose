@@ -67,20 +67,20 @@ Normal::quantile(const Real & p, const Real & mean, const Real & std_dev)
 Real
 Normal::pdf(const Real & x) const
 {
-  TIME_SECTION(_perf_pdf);
+  TIME_SECTION("Normal::pdf", 3, "Computing Normal PDF");
   return pdf(x, _mean, _standard_deviation);
 }
 
 Real
 Normal::cdf(const Real & x) const
 {
-  TIME_SECTION(_perf_cdf);
+  TIME_SECTION("Normal::cdf", 3, "Computing Normal CDF");
   return cdf(x, _mean, _standard_deviation);
 }
 
 Real
 Normal::quantile(const Real & p) const
 {
-  TIME_SECTION(_perf_quantile);
+  TIME_SECTION("Normal::quantile", 3, "Computing Normal Quantile");
   return quantile(p, _mean, _standard_deviation);
 }
